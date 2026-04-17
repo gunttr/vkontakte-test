@@ -1,0 +1,40 @@
+- name: Обновить dnf пакеты
+  become: true
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Установить nginx
+  become: true
+  ansible.builtin.dnf:
+    name: nginx
+    state: latest
+
+- name: Сгенерировать index.html
+  become: true
+  ansible.builtin.template:
+    src: templates/index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart nginx
+
+# Для дебага
+- name: Узнать версию nginx
+  ansible.builtin.command: /usr/sbin/nginx -version
+  register: nginx_version_result
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: Подготовить дебаг сводку
+  ansible.builtin.set_fact:
+    nginx_debug:
+      nginx_version: "{{ nginx_version_result | regex_findall('nginx/(\\S+)') | first | default('Неизвестно') }}"
+      access_log: "/var/log/nginx/access.log"
+      error_log: "/var/log/nginx/error.log"
+
+- name: Вывести дебаг сводку
+  ansible.builtin.debug:
+    var: nginx_debug

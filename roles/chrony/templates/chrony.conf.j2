@@ -1,0 +1,14 @@
+pool 2.rocky.pool.ntp.org iburst
+
+driftfile /var/lib/chrony/drift
+makestep 1.0 3
+rtcsync
+
+{% for network in allowed_networks %}
+allow {{ network }}
+{% endfor %}
+
+local stratum 10
+
+ntsdumpdir /var/lib/chrony
+logdir /var/log/chrony

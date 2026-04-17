@@ -1,0 +1,21 @@
+- name: Обновить все пакеты
+  become: true
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Установить chrony
+  become: true
+  ansible.builtin.dnf:
+    name: chrony
+    state: latest
+
+- name: Сгенировать chrony.conf для ntp server'a
+  become: true
+  ansible.builtin.template:
+    src: templates/chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart chronyd

@@ -1,0 +1,13 @@
+all:
+  children:
+    ntp:
+      hosts:
+        ntp_ssh:
+
+    app:
+      hosts:
+        app_ssh:
+    
+    db:
+      hosts:
+        db_ssh:

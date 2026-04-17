@@ -1,0 +1,91 @@
+- name: Обновить все пакеты dnf
+  become: true
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Создать постгрес пользователя
+  become: true
+  ansible.builtin.user:
+    name: "{{ user }}"
+    system: yes
+    create_home: yes
+    shell: /bin/bash
+
+- name: Скачать источники постгре
+  ansible.builtin.get_url:
+    url: "{{ url }}"
+    dest: "/tmp/{{ archive_name }}"
+
+- name: Разархивироать архив
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ archive_name }}"
+    dest: /tmp
+    remote_src: true
+
+- name: Создать директорию prefix
+  become: true
+  ansible.builtin.file:
+    name: "{{ prefix }}"
+    owner: root
+    group: root
+    state: directory
+    mode: "0755"
+
+- name: Настроить
+  ansible.builtin.command:
+    cmd: "./configure --prefix={{ prefix }}"
+    chdir: "/tmp/{{ dir_name }}"
+  args:
+    creates: "{{ prefix }}/bin/postgres"
+
+- name: Собрать
+  become: true
+  ansible.builtin.command:
+    cmd: "make -j{{ ansible_processor_vcpus | default(2) }}"
+    chdir: "/tmp/{{ dir_name }}"
+  args:
+    creates: "/tmp/{{ dir_name }}/src/backend/postgres"
+
+- name: Установить
+  become: true
+  ansible.builtin.command:
+    cmd: "make install"
+    chdir: "/tmp/{{ dir_name }}"
+  args:
+    creates: "{{ prefix }}/bin/postgres"
+
+- name: Создать директорию для данных
+  become: true
+  ansible.builtin.file:
+    path: "{{ data_dir }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0700"
+
+- name: Инициализировать дб
+  become: true
+  ansible.builtin.command:
+    cmd: "sudo -u {{ user }} {{ prefix }}/bin/initdb -D {{ data_dir }}"
+  args:
+    creates: "{{ data_dir }}/PG_VERSION"
+
+- name: Настроить pg_hba.conf
+  become: true
+  ansible.builtin.copy:
+    src: files/pg_hba.conf
+    dest: "{{ data_dir }}/pg_hba.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0600"
+
+- name: Создать системд сервис
+  become: true
+  ansible.builtin.template:
+    src: templates/postgresql.service.j2
+    dest: /etc/systemd/system/postgresql.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart postgresql
