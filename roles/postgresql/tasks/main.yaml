@@ -7,7 +7,7 @@
 - name: Создать постгрес пользователя
   become: true
   ansible.builtin.user:
-    name: "{{ user }}"
+    name: "{{ postgresql_user }}"
     system: true
     state: present
     create_home: false
@@ -16,18 +16,18 @@
   ansible.builtin.get_url:
     url: "{{ url }}"
     mode: "0644"
-    dest: "/tmp/{{ archive_name }}"
+    dest: "/tmp/{{ postgresql_archive_name }}"
 
 - name: Разархивировать архив
   ansible.builtin.command:
-    cmd: "tar -xzf /tmp/{{ archive_name }} -C /tmp/"
+    cmd: "tar -xzf /tmp/{{ postgresql_archive_name }} -C /tmp/"
   args:
-    creates: "/tmp/{{ dir_name }}"
+    creates: "/tmp/{{ postgresql_dir_name }}"
 
 - name: Создать директорию prefix
   become: true
   ansible.builtin.file:
-    name: "{{ prefix }}"
+    name: "{{ postgresql_prefix }}"
     owner: root
     group: root
     state: directory
@@ -35,50 +35,50 @@
 
 - name: Настроить
   ansible.builtin.command:
-    cmd: "./configure --prefix={{ prefix }}"
-    chdir: "/tmp/{{ dir_name }}"
+    cmd: "./configure --prefix={{ postgresql_prefix }}"
+    chdir: "/tmp/{{ postgresql_dir_name }}"
   args:
-    creates: "{{ prefix }}/bin/postgres"
+    creates: "{{ postgresql_prefix }}/bin/postgres"
 
 - name: Собрать
   become: true
   ansible.builtin.command:
     cmd: "make -j{{ ansible_processor_vcpus | default(2) }}"
-    chdir: "/tmp/{{ dir_name }}"
+    chdir: "/tmp/{{ postgresql_dir_name }}"
   args:
-    creates: "/tmp/{{ dir_name }}/src/backend/postgres"
+    creates: "/tmp/{{ postgresql_dir_name }}/src/backend/postgres"
 
 - name: Установить
   become: true
   ansible.builtin.command:
     cmd: "make install"
-    chdir: "/tmp/{{ dir_name }}"
+    chdir: "/tmp/{{ postgresql_dir_name }}"
   args:
-    creates: "{{ prefix }}/bin/postgres"
+    creates: "{{ postgresql_prefix }}/bin/postgres"
 
 - name: Создать директорию для данных
   become: true
   ansible.builtin.file:
-    path: "{{ data_dir }}"
+    path: "{{ postgresql_data_dir }}"
     state: directory
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_user }}"
     mode: "0700"
 
 - name: Инициализировать дб
   become: true
   ansible.builtin.command:
-    cmd: "sudo -u {{ user }} {{ prefix }}/bin/initdb -D {{ data_dir }}"
+    cmd: "sudo -u {{ postgresql_user }} {{ postgresql_prefix }}/bin/initdb -D {{ postgresql_data_dir }}"
   args:
-    creates: "{{ data_dir }}/PG_VERSION"
+    creates: "{{ postgresql_data_dir }}/PG_VERSION"
 
 - name: Настроить pg_hba.conf
   become: true
   ansible.builtin.copy:
     src: files/pg_hba.conf
-    dest: "{{ data_dir }}/pg_hba.conf"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    dest: "{{ postgresql_data_dir }}/pg_hba.conf"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_user }}"
     mode: "0600"
 
 - name: Создать системд сервис

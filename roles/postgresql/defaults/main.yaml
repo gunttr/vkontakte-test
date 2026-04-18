@@ -1,6 +1,6 @@
-user: postgres
-url: https://ftp.postgresql.org/pub/source/v13.23/postgresql-13.23.tar.gz
-dir_name: "postgresql-13.23"
-archive_name: "{{ dir_name }}.tar.gz"
-prefix: "/usr/local/pgsql-13"
-data_dir: "{{ prefix }}/data"
+postgresql_user: postgres
+postgresql_url: https://ftp.postgresql.org/pub/source/v13.23/postgresql-13.23.tar.gz
+postgresql_dir_name: "postgresql-13.23"
+postgresql_archive_name: "{{ dir_name }}.tar.gz"
+postgresql_prefix: "/usr/local/pgsql-13"
+postgresql_data_dir: "{{ prefix }}/data"
