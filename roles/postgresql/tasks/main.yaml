@@ -9,8 +9,8 @@
   ansible.builtin.user:
     name: "{{ user }}"
     system: yes
-    create_home: yes
-    shell: /bin/bash
+    state: present
+    create_home: no
 
 - name: Скачать источники постгре
   ansible.builtin.get_url:
@@ -18,10 +18,10 @@
     dest: "/tmp/{{ archive_name }}"
 
 - name: Разархивироать архив
-  ansible.builtin.unarchive:
-    src: "/tmp/{{ archive_name }}"
-    dest: /tmp
-    remote_src: true
+  ansible.builtin.command:
+    cmd: "tar -xzf /tmp/{{ archive_name }} -C /tmp/"
+  args:
+    creates: "/tmp/{{ dir_name }}"
 
 - name: Создать директорию prefix
   become: true
