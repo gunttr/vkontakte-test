@@ -1,14 +1,17 @@
 - name: Установка chrony на ntp server
   hosts: ntp
+  tags: ntp, chrony
   roles:
     - role: chrony
 
 - name: Установка nginx на app server
   hosts: app
+  tags: app, nginx
   roles:
     - role: nginx
 
 - name: Установка postgresql на db server
   hosts: db
+  tags: db, postgresql
   roles:
     - role: postgresql
