@@ -1,0 +1,15 @@
+roles:
+  - name: chrony
+    src: git@github.com:gunttr/chrony_role.git
+    version: main
+    scm: git
+
+  - name: nginx
+    src: git@github.com:gunttr/nginx_role.git
+    version: main
+    scm: git
+
+  - name: postgresql
+    src: git@github.com:gunttr/postgresql_role.git
+    version: main
+    scm: git
