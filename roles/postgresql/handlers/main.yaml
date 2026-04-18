@@ -1,6 +1,11 @@
-- name: Restart postgresql
+- name: Daemon-reload
   become: true
   ansible.builtin.service:
     name: postgresql
     daemon_reload: true
+
+- name: Restart postgresql
+  become: true
+  ansible.builtin.service:
+    name: postgresql
     state: restarted
