@@ -1,9 +1,3 @@
-- name: Обновить все пакеты dnf
-  become: true
-  ansible.builtin.dnf:
-    name: "*"
-    state: latest
-
 - name: Создать постгрес пользователя
   become: true
   ansible.builtin.user:

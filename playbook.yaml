@@ -2,7 +2,6 @@
   hosts: ntp
   roles:
     - role: chrony
-      vars:
 
 - name: Установка nginx на app server
   hosts: app

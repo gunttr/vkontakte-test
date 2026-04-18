@@ -1,9 +1,3 @@
-- name: Обновить все пакеты
-  become: true
-  ansible.builtin.dnf:
-    name: "*"
-    state: latest
-
 - name: Установить chrony
   become: true
   ansible.builtin.dnf:

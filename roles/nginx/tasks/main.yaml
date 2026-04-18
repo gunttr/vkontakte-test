@@ -1,9 +1,3 @@
-- name: Обновить dnf пакеты
-  become: true
-  ansible.builtin.dnf:
-    name: "*"
-    state: latest
-
 - name: Установить nginx
   become: true
   ansible.builtin.dnf:
