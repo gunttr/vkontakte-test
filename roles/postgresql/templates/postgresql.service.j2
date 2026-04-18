@@ -4,12 +4,11 @@ After=network.target
 
 [Service]
 Type=forking
-User={{ user }}
-ExecStart={{ prefix }}/bin/pg_ctl -D {{ data_dir }} -l {{ data_dir }}/logfile start
-ExecStop={{ prefix }}/bin/pg_ctl -D {{ data_dir }} stop
-ExecReload={{ prefix }}/bin/pg_ctl -D {{ data_dir }} reload
-PIDFile={{ data_dir }}/postmaster.pid
-
+User={{ postgresql_user }}
+ExecStart={{ postgresql_prefix }}/bin/pg_ctl -D {{ postgresql_data_dir }} -l {{ postgresql_data_dir }}/logfile start
+ExecStop={{ postgresql_prefix }}/bin/pg_ctl -D {{ postgresql_data_dir }} stop
+ExecReload={{ postgresql_prefix }}/bin/pg_ctl -D {{ postgresql_data_dir }} reload
+PIDFile={{ postgresql_data_dir }}/postmaster.pid
 
 [Install]
 WantedBy=multi-user.target

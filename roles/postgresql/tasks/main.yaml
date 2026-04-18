@@ -8,7 +8,7 @@
 
 - name: Скачать источники постгре
   ansible.builtin.get_url:
-    url: "{{ url }}"
+    url: "{{ postgresql_url }}"
     mode: "0644"
     dest: "/tmp/{{ postgresql_archive_name }}"
 
