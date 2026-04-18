@@ -1,0 +1,1 @@
+chrony_ntp_clients: "{{ groups['ntp_clients'] | map('extract', hostvars, 'ansible_host') | list }}"

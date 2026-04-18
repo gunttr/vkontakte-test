@@ -1,0 +1,17 @@
+all:
+  children:
+    ntp:
+      hosts:
+        ntp_ssh: {}
+
+    ntp_clients:
+      hosts:
+        client1:
+          ansible_host: 186.246.50.196
+    app:
+      hosts:
+        app_ssh: {}
+
+    db:
+      hosts:
+        db_ssh: {}
