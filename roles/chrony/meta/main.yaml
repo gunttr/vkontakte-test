@@ -1,0 +1,8 @@
+galaxy_info:
+  role_name: chrony
+  author: gunttr
+  license: MIT
+  description: Installing chrony and ntp server configuration
+  min_ansible_version: "2.20"
+
+dependencies: []
