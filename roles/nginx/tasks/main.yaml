@@ -4,6 +4,13 @@
     name: "nginx-{{ nginx_package_version }}"
     state: present
 
+- name: Включить и запустить nginx.service
+  become: true
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+    state: started
+
 - name: Сгенерировать index.html
   become: true
   ansible.builtin.template:
