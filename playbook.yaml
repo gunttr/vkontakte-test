@@ -1,10 +1,8 @@
 - name: Установка chrony на ntp server
   hosts: ntp
-  roles: 
+  roles:
     - role: chrony
-      vars: 
-        allowed_networks:
-          - 186.246.50.196  
+      vars:
 
 - name: Установка nginx на app server
   hosts: app
@@ -14,12 +12,4 @@
 - name: Установка postgresql на db server
   hosts: db
   roles:
-      - role: postgresql
-        vars:
-          user: postgres
-          url: https://ftp.postgresql.org/pub/source/v13.23/postgresql-13.23.tar.gz
-          dir_name: "postgresql-13.23"
-          archive_name: "{{ dir_name }}.tar.gz"
-          prefix: "/usr/local/pgsql-13"
-          data_dir: "{{ prefix }}/data"
-
+    - role: postgresql
