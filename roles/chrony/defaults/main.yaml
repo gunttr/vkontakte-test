@@ -1,2 +1,2 @@
-allowed_networks:
+chrony_ntp_clients:
   - 186.246.50.196

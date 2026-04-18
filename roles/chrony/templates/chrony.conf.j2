@@ -4,8 +4,8 @@ driftfile /var/lib/chrony/drift
 makestep 1.0 3
 rtcsync
 
-{% for network in allowed_networks %}
-allow {{ network }}
+{% for client in chrony_ntp_clients %}
+allow {{ client }}
 {% endfor %}
 
 local stratum 10
