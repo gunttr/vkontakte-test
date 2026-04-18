@@ -8,16 +8,17 @@
   become: true
   ansible.builtin.user:
     name: "{{ user }}"
-    system: yes
+    system: true
     state: present
-    create_home: no
+    create_home: false
 
 - name: Скачать источники постгре
   ansible.builtin.get_url:
     url: "{{ url }}"
+    mode: "0644"
     dest: "/tmp/{{ archive_name }}"
 
-- name: Разархивироать архив
+- name: Разархивировать архив
   ansible.builtin.command:
     cmd: "tar -xzf /tmp/{{ archive_name }} -C /tmp/"
   args:
@@ -88,4 +89,4 @@
     owner: root
     group: root
     mode: "0644"
-  notify: restart postgresql
+  notify: Restart postgresql
