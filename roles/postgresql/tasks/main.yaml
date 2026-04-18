@@ -37,7 +37,7 @@
 - name: Собрать
   become: true
   ansible.builtin.command:
-    cmd: "make -j{{ ansible_facts[']processor_vcpus'] | default(2) }}"
+    cmd: "make -j{{ ansible_facts['processor_vcpus'] | default(2) }}"
     chdir: "/tmp/{{ postgresql_dir_name }}"
   args:
     creates: "/tmp/{{ postgresql_dir_name }}/src/backend/postgres"
