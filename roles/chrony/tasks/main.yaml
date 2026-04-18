@@ -1,8 +1,8 @@
 - name: Установить chrony
   become: true
   ansible.builtin.dnf:
-    name: chrony
-    state: latest
+    name: "chrony-{{ chrony_package_version }}"
+    state: present
 
 - name: Сгенировать chrony.conf для ntp server'a
   become: true
